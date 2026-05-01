@@ -39,6 +39,20 @@
       "notes": "Testing 2",
       "id": 13,
       "jiraKey": "PRR-1"
+    },
+    {
+      "title": "Meu app nao esta baixando",
+      "cat": "Technical",
+      "status": "Open",
+      "p": 1,
+      "i": 1,
+      "owner": "",
+      "identified": "2026-05-01",
+      "target": "2026-05-22",
+      "mitigation": "",
+      "notes": "",
+      "id": 14,
+      "jiraKey": "PRR-2"
     }
   ]
 }
