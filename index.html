@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Support Hub — Bomb Party</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --citron:   #EAE753;
+  --navy:     #0F3053;
+  --green:    #3DB88B;
+  --amber:    #F0B63C;
+  --red:      #E15D5D;
+  --charcoal: #2C2C2C;
+  --ice:      #EEF8FF;
+  --soft:     #F7F9FC;
+  --line:     rgba(15,48,83,0.10);
+  --line2:    rgba(15,48,83,0.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;color:var(--charcoal);background:var(--soft);-webkit-font-smoothing:antialiased;line-height:1.55;font-size:14px}
+
+/* ─── NAV ─── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(247,249,252,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-left{display:flex;align-items:center;gap:.85rem}
+.nav-logo{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);background:rgba(234,231,83,0.40);border:1px solid rgba(234,231,83,0.6);padding:4px 10px;border-radius:100px}
+.nav-title{font-size:.78rem;font-weight:500;color:var(--navy);opacity:.6}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-pill{display:flex;align-items:center;gap:5px;font-size:.55rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.5;background:white;border:1px solid var(--line);padding:4px 10px;border-radius:100px}
+.nav-pill .dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.nav-pill .dot.green{background:var(--green)}
+.nav-date{font-size:.58rem;color:var(--navy);opacity:.35;letter-spacing:.04em;text-transform:uppercase}
+
+/* ─── TABS ─── */
+.tabs{position:sticky;top:49px;z-index:90;background:var(--soft);border-bottom:1px solid var(--line);padding:0 2rem;display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:.9rem 1.1rem;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);opacity:.38;cursor:pointer;white-space:nowrap;transition:opacity .15s,border-color .15s}
+.tab-btn:hover{opacity:.65}
+.tab-btn.active{opacity:1;border-bottom-color:var(--navy)}
+.tab-num{opacity:.5;margin-right:4px}
+
+/* ─── LAYOUT ─── */
+.main{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.pane{display:none}
+.pane.active{display:block}
+
+/* ─── PAGE HEADER ─── */
+.page-header{margin-bottom:2rem}
+.page-header h2{font-size:1.45rem;font-weight:700;color:var(--navy);letter-spacing:-.02em;margin-bottom:.4rem}
+.page-header p{font-size:.8rem;color:var(--navy);opacity:.5;line-height:1.6}
+
+/* ─── SECTION BLOCK ─── */
+.section-block{background:white;border:1px solid var(--line);border-radius:14px;margin-bottom:1.25rem;overflow:hidden}
+.section-head{display:flex;align-items:flex-start;gap:1rem;padding:1.4rem 1.6rem 1.2rem;border-bottom:1px solid var(--line2)}
+.section-icon{width:44px;height:44px;flex-shrink:0;background:var(--ice);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.section-head-text h3{font-size:.85rem;font-weight:600;color:var(--navy);margin-bottom:.2rem}
+.section-head-text span{font-size:.73rem;color:var(--navy);opacity:.45}
+.section-body{padding:1.4rem 1.6rem}
+.section-body.no-pad{padding:0}
+
+/* ─── TABLE ─── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead th{padding:.7rem 1rem;text-align:left;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.45;background:var(--soft);border-bottom:1px solid var(--line)}
+tbody tr{border-bottom:1px solid var(--line2);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(15,48,83,0.02)}
+td{padding:.8rem 1rem;font-size:.8rem;vertical-align:top;line-height:1.55}
+.td-bold{font-weight:600;color:var(--navy)}
+.td-muted{color:var(--navy);opacity:.45;font-size:.75rem}
+
+/* ─── BADGES ─── */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:.62rem;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+.badge-sev1{background:rgba(225,93,93,0.12);color:#B91C1C;border:1px solid rgba(225,93,93,0.25)}
+.badge-sev2{background:rgba(240,182,60,0.15);color:#92400E;border:1px solid rgba(240,182,60,0.3)}
+.badge-sev3{background:rgba(90,151,212,0.12);color:#1E40AF;border:1px solid rgba(90,151,212,0.25)}
+.badge-codes{background:rgba(15,48,83,0.08);color:var(--navy);border:1px solid var(--line)}
+.badge-green{background:rgba(61,184,139,0.12);color:#065F46;border:1px solid rgba(61,184,139,0.25)}
+.badge-red{background:rgba(225,93,93,0.12);color:#B91C1C;border:1px solid rgba(225,93,93,0.25)}
+
+/* ─── ALERT BANNER ─── */
+.alert{border-left:3px solid var(--navy);background:rgba(15,48,83,0.04);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-size:.78rem;color:var(--navy);opacity:.75;margin-bottom:1rem;line-height:1.6}
+.alert.red{border-color:var(--red);background:rgba(225,93,93,0.06);color:#B91C1C;opacity:1}
+.alert.amber{border-color:var(--amber);background:rgba(240,182,60,0.08);color:#78350F;opacity:1}
+.alert strong{font-weight:700}
+
+/* ─── GRID ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem}
+@media(max-width:768px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ─── KPI ─── */
+.kpi{background:white;border:1px solid var(--line);border-radius:12px;padding:1.25rem 1.4rem}
+.kpi-label{font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.5rem}
+.kpi-value{font-size:2rem;font-weight:700;color:var(--navy);line-height:1}
+.kpi-sub{font-size:.65rem;color:var(--navy);opacity:.35;margin-top:.4rem}
+
+/* ─── STEP LIST ─── */
+.step-list{list-style:none}
+.step-item{display:flex;gap:.85rem;padding:.65rem 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.step-item:last-child{border-bottom:none}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--navy);color:white;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-num.red{background:var(--red)}
+.step-num.amber{background:var(--amber);color:#78350F}
+.step-body{flex:1}
+.step-title{font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.2rem}
+.step-desc{font-size:.76rem;color:var(--navy);opacity:.5;line-height:1.6}
+
+/* ─── TEMPLATE BOX ─── */
+.template-box{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:1rem 1.2rem;font-size:.78rem;color:var(--charcoal);line-height:1.8;white-space:pre-wrap;font-family:'Inter',sans-serif;position:relative;margin-bottom:.85rem}
+.copy-btn{position:absolute;top:.7rem;right:.7rem;background:white;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:.6rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy);opacity:.5;cursor:pointer;transition:opacity .15s}
+.copy-btn:hover{opacity:1}
+.copy-btn.copied{color:var(--green);opacity:1}
+
+/* ─── CONTACT CARD ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.contact-card{background:white;border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.4rem}
+.contact-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;padding-bottom:.75rem;border-bottom:1px solid var(--line2)}
+.contact-avatar{width:38px;height:38px;border-radius:50%;background:rgba(15,48,83,0.08);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--navy);flex-shrink:0}
+.contact-name{font-size:.85rem;font-weight:600;color:var(--navy)}
+.contact-role{font-size:.7rem;color:var(--navy);opacity:.45;margin-top:2px}
+.contact-row{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.75rem;border-bottom:1px solid var(--line2)}
+.contact-row:last-child{border-bottom:none}
+.contact-row-label{color:var(--navy);opacity:.45;font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em}
+.contact-row-val{color:var(--charcoal);font-weight:500}
+.notify-badge{font-size:.62rem;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(15,48,83,0.07);color:var(--navy);margin-top:.35rem;display:inline-block}
+
+/* ─── DOC / PLAYBOOK CARD ─── */
+.play-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.play-card{background:white;border:1px solid var(--line);border-radius:12px;padding:1.4rem 1.5rem;display:flex;flex-direction:column;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.play-card:hover{border-color:rgba(15,48,83,0.2);box-shadow:0 2px 12px rgba(15,48,83,0.06)}
+.play-emoji{font-size:1.6rem;margin-bottom:.7rem}
+.play-title{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.play-desc{font-size:.75rem;color:var(--navy);opacity:.5;line-height:1.6;flex:1}
+.play-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--line2)}
+.play-tag{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.35}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.6rem 1.2rem;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn:hover{opacity:.85}
+.btn:active{transform:scale(.97)}
+.btn-navy{background:var(--navy);color:white}
+.btn-outline{background:white;color:var(--navy);border:1.5px solid rgba(15,48,83,0.2)}
+.btn-ghost{background:none;color:var(--navy);opacity:.5;font-size:.72rem;padding:.5rem;border:none;cursor:pointer}
+.btn-sm{padding:.45rem .85rem;font-size:.7rem}
+.btn-red{background:var(--red);color:white}
+
+/* ─── SIM TRACKER ─── */
+.sim-card{background:white;border:1px solid var(--line);border-radius:12px;padding:1.4rem 1.6rem;margin-bottom:1rem}
+.sim-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.sim-status{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;padding:4px 12px;border-radius:100px}
+.sim-status.pending{background:rgba(240,182,60,0.12);color:#92400E}
+.sim-status.done{background:rgba(61,184,139,0.12);color:#065F46}
+.sim-status.overdue{background:rgba(225,93,93,0.12);color:#B91C1C}
+.checklist{list-style:none}
+.check-item{display:flex;align-items:flex-start;gap:.65rem;padding:.45rem 0;border-bottom:1px solid var(--line2);font-size:.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border:1.5px solid rgba(15,48,83,0.2);border-radius:4px;flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.chk.done{background:var(--green);border-color:var(--green)}
+.chk.done::after{content:"✓";color:white;font-size:9px;font-weight:700}
+.check-item.done-item .chk-text{text-decoration:line-through;opacity:.45}
+
+/* ─── MODAL (doc viewer) ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,48,83,0.35);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:white;border-radius:16px;border:1px solid var(--line);width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;transform:translateY(12px);transition:transform .2s;box-shadow:0 20px 60px rgba(15,48,83,0.15)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:1.5rem 1.75rem 1.2rem;border-bottom:1px solid var(--line2);flex-shrink:0}
+.modal-hdr-left{display:flex;align-items:flex-start;gap:.85rem}
+.modal-icon{font-size:1.6rem;line-height:1;margin-top:2px}
+.modal-hdr h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+.modal-hdr .tag{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.35}
+.modal-body{padding:1.5rem 1.75rem;overflow-y:auto;flex:1}
+.modal-ftr{padding:1rem 1.75rem;border-top:1px solid var(--line2);display:flex;justify-content:flex-end;gap:.6rem;flex-shrink:0}
+
+/* ─── MODAL CONTENT ─── */
+.m-section{margin-bottom:1.5rem}
+.m-section:last-child{margin-bottom:0}
+.m-section h4{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.65rem;padding-bottom:.4rem;border-bottom:1px solid var(--line2)}
+.m-p{font-size:.8rem;color:var(--charcoal);line-height:1.7;margin-bottom:.5rem}
+.m-p:last-child{margin-bottom:0}
+.m-alert{border-left:3px solid var(--red);background:rgba(225,93,93,0.06);border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.78rem;color:#B91C1C;margin:.75rem 0;line-height:1.6}
+.m-note{border-left:3px solid var(--navy);background:rgba(15,48,83,0.04);border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.78rem;color:var(--navy);opacity:.7;margin:.75rem 0;line-height:1.6}
+.m-template{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.9rem 1.1rem;font-size:.76rem;color:var(--charcoal);line-height:1.85;white-space:pre-wrap;font-family:'Inter',sans-serif;margin:.75rem 0}
+.m-table{width:100%;border-collapse:collapse;font-size:.77rem;margin:.75rem 0}
+.m-table th{padding:.5rem .8rem;text-align:left;font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.4;background:var(--soft);border-bottom:1px solid var(--line)}
+.m-table td{padding:.65rem .8rem;border-bottom:1px solid var(--line2);vertical-align:top;line-height:1.55}
+.m-table tr:last-child td{border-bottom:none}
+.m-step{display:flex;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.m-step:last-child{border-bottom:none}
+.m-step-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:white;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.m-step-body{flex:1}
+.m-step-title{font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.2rem}
+.m-step-desc{font-size:.75rem;color:var(--navy);opacity:.5;line-height:1.6}
+.m-war-template{background:var(--navy);color:white;border-radius:8px;padding:1rem 1.2rem;font-size:.76rem;line-height:1.85;white-space:pre-wrap;font-family:'Inter',sans-serif;margin:.75rem 0}
+
+/* ─── CODES COLORS ─── */
+.codes-O{background:rgba(225,93,93,0.10);border-left:3px solid var(--red)}
+.codes-C{background:rgba(240,182,60,0.10);border-left:3px solid var(--amber)}
+.codes-D{background:rgba(90,151,212,0.10);border-left:3px solid #5A97D4}
+.codes-E{background:rgba(61,184,139,0.10);border-left:3px solid var(--green)}
+.codes-S{background:rgba(15,48,83,0.07);border-left:3px solid var(--navy)}
+.codes-card{border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin-bottom:.85rem}
+.codes-card h4{font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:.3rem}
+.codes-card p{font-size:.76rem;color:var(--navy);opacity:.6;line-height:1.55}
+.codes-letter{font-size:1.4rem;font-weight:800;color:var(--navy);opacity:.2;float:right;line-height:1}
+
+/* ─── WAR ROOM CTA ─── */
+.war-room-cta{background:var(--navy);border-radius:12px;padding:1.4rem 1.6rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}
+.war-room-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:white;opacity:.55;margin-bottom:.3rem}
+.war-room-url{font-size:.85rem;font-weight:600;color:white;opacity:.45;font-style:italic}
+.war-room-url.set{color:#EAE753;opacity:1;font-style:normal}
+.war-room-cta .btn-launch{background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.2);font-size:.75rem;padding:.55rem 1.2rem;border-radius:8px;cursor:pointer;font-weight:600;font-family:'Inter',sans-serif;transition:background .15s}
+.war-room-cta .btn-launch:hover{background:rgba(255,255,255,0.2)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid rgba(15,48,83,0.15);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+
+/* ─── ALWAYS-ON EDITABLE ─── */
+[data-e]{outline:none;border-radius:3px;transition:background .12s}
+[data-e]:hover{background:rgba(234,231,83,0.18);cursor:text}
+[data-e]:focus{background:rgba(234,231,83,0.28);outline:2px solid rgba(15,48,83,0.3);outline-offset:1px}
+
+/* ─── STATUS BADGES (page tree) ─── */
+.pt-status{font-size:.62rem;font-weight:600;padding:3px 10px;border-radius:100px;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.pt-status.notstarted{background:rgba(15,48,83,0.07);color:var(--navy);opacity:.5}
+.pt-status.inprogress{background:rgba(240,182,60,0.15);color:#92400E}
+.pt-status.done{background:rgba(61,184,139,0.12);color:#065F46}
+
+/* ─── SYNC INDICATOR ─── */
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:.55rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:100px;border:1px solid var(--line);background:white;transition:all .25s}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:background .25s}
+.sync-pill.idle    .sdot{background:#CBD5E1}
+.sync-pill.loading .sdot{background:var(--amber);animation:pulse .7s infinite}
+.sync-pill.ok      .sdot{background:var(--green)}
+.sync-pill.err     .sdot{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ─── TOAST ─── */
+@keyframes fadeup{0%{opacity:0;transform:translateY(6px)}15%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:0}}
+.save-toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:white;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;padding:.5rem 1.1rem;border-radius:100px;z-index:9999;animation:fadeup 2.2s ease forwards;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-left">
+    <span class="nav-logo">BOMBPARTY</span>
+    <span class="nav-title">Application Support Hub</span>
+  </div>
+  <div class="nav-right">
+    <div class="sync-pill idle" id="sync-pill">
+      <span class="sdot"></span><span id="sync-label">Loading…</span>
+    </div>
+    <div class="nav-pill"><span class="dot green"></span><span>APPSUP · Jira live</span></div>
+    <div class="nav-date" id="nav-date"></div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════ TABS ════════════════════════════════ -->
+<div class="tabs" id="tab-bar">
+  <button class="tab-btn active" data-pane="home"><span class="tab-num">01</span>Home</button>
+  <button class="tab-btn" data-pane="codes"><span class="tab-num">02</span>CODES Framework</button>
+  <button class="tab-btn" data-pane="severity"><span class="tab-num">03</span>Severity & SLAs</button>
+  <button class="tab-btn" data-pane="sops"><span class="tab-num">04</span>Incident SOPs</button>
+  <button class="tab-btn" data-pane="playbooks"><span class="tab-num">05</span>Playbooks</button>
+  <button class="tab-btn" data-pane="escalation"><span class="tab-num">06</span>Escalation</button>
+  <button class="tab-btn" data-pane="templates"><span class="tab-num">07</span>Templates</button>
+  <button class="tab-btn" data-pane="readiness"><span class="tab-num">08</span>Readiness</button>
+</div>
+
+<!-- ════════════════════════════════════ MAIN ════════════════════════════════ -->
+<main class="main">
+
+  <!-- ── 01 HOME ── -->
+  <div class="pane active" id="pane-home">
+    <div class="page-header">
+      <h2>Application Support Hub</h2>
+      <p>Owner: Douglas Fernandes &nbsp;·&nbsp; Jira: APPSUP &nbsp;·&nbsp; Slack: #incidents &nbsp;·&nbsp; Hard deadline: July 9<br>When something breaks, start here. No guessing. No Googling. Everything you need is in this space.</p>
+    </div>
+
+    <div class="war-room-cta">
+      <div>
+        <div class="war-room-label">⚡ War Room Bridge — Open at Minute 5 for all SEV 1 incidents</div>
+        <div class="war-room-url" id="war-room-display">FILL IN BRIDGE URL BEFORE JULY 9</div>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center">
+        <input type="text" id="war-room-input" placeholder="Paste bridge URL…" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.78rem;color:white;outline:none;width:220px" oninput="updateWarRoom()">
+        <button class="btn-launch" onclick="launchWarRoom()">Launch Bridge →</button>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="section-block" style="margin-bottom:0">
+        <div class="section-head"><div class="section-icon">🚨</div><div class="section-head-text"><h3>Emergency Contacts</h3><span>Fill all contacts before July 9 — verify quarterly</span></div></div>
+        <div class="section-body no-pad">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Role</th><th>Contact</th><th>Notify when</th></tr></thead>
+              <tbody>
+                <tr><td class="td-bold">Isaac</td><td class="td-muted">Engineering Lead</td><td class="td-muted">SMS: <span class="ef" data-key="isaac-sms" contenteditable="true"></span> · Slack: @isaac</td><td><span class="badge badge-red">Min 0 — SEV 1 & 2</span></td></tr>
+                <tr><td class="td-bold">Alan</td><td class="td-muted">VP Digital Products</td><td class="td-muted">SMS: <span class="ef" data-key="alan-sms" contenteditable="true"></span> · Slack: @alan</td><td><span class="badge badge-sev1">Min 15 — SEV 1 only</span></td></tr>
+                <tr><td class="td-bold">Exigo Support</td><td class="td-muted">Commission & ordering</td><td class="td-muted"><span class="ef" data-key="exigo-phone" contenteditable="true"></span> · support@exigo.com</td><td><span class="badge badge-codes">Orders down — SEV 1</span></td></tr>
+                <tr><td class="td-bold">GetStream Support</td><td class="td-muted">Live streaming</td><td class="td-muted"><span class="ef" data-key="getstream-phone" contenteditable="true"></span> · support@getstream.io</td><td><span class="badge badge-codes">Stream down — SEV 1</span></td></tr>
+                <tr><td class="td-bold">Contentful Support</td><td class="td-muted">CMS & content</td><td class="td-muted"><span class="ef" data-key="contentful-phone" contenteditable="true"></span> · support@contentful.com</td><td><span class="badge badge-codes">Content delivery failure</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block" style="margin-bottom:0">
+        <div class="section-head"><div class="section-icon">⚡</div><div class="section-head-text"><h3>Quick Severity Reference</h3><span>When in doubt — declare higher. Downgrade after assessment.</span></div></div>
+        <div class="section-body no-pad">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Level</th><th>Trigger</th><th>Response</th><th>Page Alan?</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge badge-sev1">SEV 1</span></td><td style="font-size:.77rem">Critical system down — revenue or growth at risk</td><td style="font-size:.77rem">Min 0 — page Isaac immediately</td><td><span class="badge badge-red">Yes — Min 15</span></td></tr>
+                <tr><td><span class="badge badge-sev2">SEV 2</span></td><td style="font-size:.77rem">Major degradation — workaround may exist</td><td style="font-size:.77rem">Min 5 — notify via Slack</td><td><span class="badge badge-green">No (unless 3+ hrs)</span></td></tr>
+                <tr><td><span class="badge badge-sev3">SEV 3</span></td><td style="font-size:.77rem">Minor issue — cosmetic or low impact</td><td style="font-size:.77rem">Create Jira ticket — backlog</td><td><span class="badge badge-green">Never</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head"><div class="section-icon">📊</div><div class="section-head-text"><h3>Space Overview</h3><span>APPSUP Confluence structure — build this before July 9</span></div></div>
+      <div class="section-body no-pad">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Page</th><th>Parent</th><th>Priority</th><th>Status</th></tr></thead>
+            <tbody id="page-tree"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 02 CODES ── -->
+  <div class="pane" id="pane-codes">
+    <div class="page-header">
+      <h2>CODES Framework</h2>
+      <p>BombParty's incident prioritization system. When an incident is reported, the first question is always: what CODES category does this fall into? The category determines response speed, escalation path, and communication cadence.</p>
+    </div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">🔤</div><div class="section-head-text"><h3>The Five Categories</h3><span>Classify every incident the moment it is reported</span></div></div>
+      <div class="section-body">
+        <div class="codes-card codes-O"><span class="codes-letter">O</span><h4>Orders &nbsp;<span class="badge badge-sev1">SEV 1 default</span></h4><p>Reps or customers cannot place orders. Revenue is actively at risk. <strong>HIGHEST PRIORITY.</strong></p></div>
+        <div class="codes-card codes-C"><span class="codes-letter">C</span><h4>Code &nbsp;<span class="badge badge-sev2">SEV 1–2</span></h4><p>Core business logic errors affecting multiple users or tenants simultaneously.</p></div>
+        <div class="codes-card codes-D"><span class="codes-letter">D</span><h4>Data &nbsp;<span class="badge badge-sev2">SEV 1–2</span></h4><p>Data sync failures, corruption, or data loss between systems.</p></div>
+        <div class="codes-card codes-E"><span class="codes-letter">E</span><h4>Enrollment &nbsp;<span class="badge badge-sev2">SEV 1–2</span></h4><p>Reps or customers cannot sign up or activate. Growth at risk.</p></div>
+        <div class="codes-card codes-S" style="margin-bottom:0"><span class="codes-letter">S</span><h4>Strategic &nbsp;<span class="badge badge-codes">Immediate</span></h4><p>Board or executive directive bypassing normal escalation. Immediate regardless of time or day.</p></div>
+      </div>
+    </div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">🔍</div><div class="section-head-text"><h3>CODES Decision Quick Reference</h3><span>Match the symptom you observe to the correct category</span></div></div>
+      <div class="section-body no-pad">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Symptom you observe</th><th>CODES Category</th><th>Likely Severity</th></tr></thead>
+            <tbody>
+              <tr><td>Order submission failing or payment errors</td><td><span class="badge badge-red">CODES-O (Orders)</span></td><td><span class="badge badge-sev1">SEV 1</span></td></tr>
+              <tr><td>App crash affecting many users</td><td><span class="badge badge-amber">CODES-C (Code)</span></td><td><span class="badge badge-sev1">SEV 1</span></td></tr>
+              <tr><td>Commission data not syncing correctly</td><td><span class="badge badge-codes">CODES-D (Data)</span></td><td><span class="badge badge-sev2">SEV 1 or 2</span></td></tr>
+              <tr><td>Signup or activation flow broken</td><td><span class="badge badge-green">CODES-E (Enrollment)</span></td><td><span class="badge badge-sev1">SEV 1</span></td></tr>
+              <tr><td>Live stream down or severely degraded</td><td><span class="badge badge-amber">CODES-C (Code)</span></td><td><span class="badge badge-sev1">SEV 1</span></td></tr>
+              <tr><td>Reports slow or some reps cannot log in</td><td><span class="badge badge-amber">CODES-C (Code)</span></td><td><span class="badge badge-sev2">SEV 2</span></td></tr>
+              <tr><td>UI glitch, email delay, cosmetic bug</td><td><span class="badge badge-amber">CODES-C (Code)</span></td><td><span class="badge badge-sev3">SEV 3</span></td></tr>
+              <tr><td>Alan or board directive on any issue</td><td><span class="badge badge-codes">CODES-S (Strategic)</span></td><td><span class="badge badge-sev1">Immediate</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head"><div class="section-icon">📋</div><div class="section-head-text"><h3>How to Use CODES — Step by Step</h3><span>Follow this every time an incident is reported</span></div></div>
+      <div class="section-body">
+        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Incident is reported</div><div class="step-desc">By a rep, monitoring system, engineering, or you detect it personally.</div></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Classify the CODES category</div><div class="step-desc">Is revenue at risk (O)? Is data corrupted (D)? Is enrollment broken (E)? Is it a core logic error (C)? Did Alan or the board direct this (S)?</div></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Determine severity</div><div class="step-desc">See the Severity Levels & SLAs tab. CODES-O = almost always SEV 1.</div></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Create the Jira ticket in APPSUP</div><div class="step-desc">Set the CODES label (CODES-O, CODES-C, etc.) + the SEV label (SEV1, SEV2, SEV3) + the correct component.</div></div></div>
+        <div class="step-item"><div class="step-num">5</div><div class="step-body"><div class="step-title">Execute the SOP for that severity level</div><div class="step-desc">The SOP tells you exactly who to call, when, and what to say. See the Incident SOPs tab.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 03 SEVERITY ── -->
+  <div class="pane" id="pane-severity">
+    <div class="page-header">
+      <h2>Severity Levels & SLAs</h2>
+      <p>These are non-negotiable SLAs. Every time listed is a maximum, not a target. When in doubt, declare higher — it is always better to over-respond.</p>
+    </div>
+
+    <div class="alert red" style="margin-bottom:1.25rem">When in doubt, declare higher. It is always better to over-respond to a SEV 2 that turns out to be a SEV 3 than to under-respond to a SEV 1. Downgrade if needed after initial assessment.</div>
+
+    <div class="g3" style="margin-bottom:1.25rem">
+      <div class="section-block" style="margin-bottom:0;border-top:3px solid var(--red)">
+        <div class="section-body">
+          <div style="margin-bottom:.85rem"><span class="badge badge-sev1" style="font-size:.75rem;padding:4px 12px">SEV 1 — Critical</span></div>
+          <p style="font-size:.78rem;color:var(--navy);opacity:.6;margin-bottom:.75rem">System down or severely degraded. Affects 10%+ of users or any critical business function.</p>
+          <div style="font-size:.75rem;line-height:1.9;color:var(--charcoal)">
+            <div><strong>Min 0:</strong> SMS Isaac + on-call</div>
+            <div><strong>Min 5:</strong> Declare war room</div>
+            <div><strong>Min 15:</strong> SMS Alan</div>
+            <div><strong>Cadence:</strong> Every 15 minutes</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-block" style="margin-bottom:0;border-top:3px solid var(--amber)">
+        <div class="section-body">
+          <div style="margin-bottom:.85rem"><span class="badge badge-sev2" style="font-size:.75rem;padding:4px 12px">SEV 2 — Major</span></div>
+          <p style="font-size:.78rem;color:var(--navy);opacity:.6;margin-bottom:.75rem">Major functionality unavailable or significant degradation. Workaround may exist.</p>
+          <div style="font-size:.75rem;line-height:1.9;color:var(--charcoal)">
+            <div><strong>Min 5:</strong> Notify on-call via Slack</div>
+            <div><strong>Min 30:</strong> Formal declaration</div>
+            <div><strong>Cadence:</strong> Every 60 minutes</div>
+            <div><strong>Page Alan:</strong> Only if 3+ hrs</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-block" style="margin-bottom:0;border-top:3px solid #5A97D4">
+        <div class="section-body">
+          <div style="margin-bottom:.85rem"><span class="badge badge-sev3" style="font-size:.75rem;padding:4px 12px">SEV 3 — Minor</span></div>
+          <p style="font-size:.78rem;color:var(--navy);opacity:.6;margin-bottom:.75rem">Minor issue. Workaround available. No revenue or growth impact.</p>
+          <div style="font-size:.75rem;line-height:1.9;color:var(--charcoal)">
+            <div><strong>Action:</strong> Create Jira ticket</div>
+            <div><strong>Priority:</strong> Assign to backlog</div>
+            <div><strong>Cadence:</strong> No SLA required</div>
+            <div><strong>Page Alan:</strong> Never</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">⏱️</div><div class="section-head-text"><h3>SEV 1 — Full Minute-by-Minute Timeline</h3><span>Every step required — no exceptions</span></div></div>
+      <div class="section-body no-pad">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Time</th><th>Owner</th><th>Required Action</th></tr></thead>
+            <tbody>
+              <tr><td class="td-bold" style="color:var(--red);white-space:nowrap">Minute 0</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Confirm incident is real. Page Isaac via SMS. Page on-call engineer. Post in #incidents Slack.</td></tr>
+              <tr><td class="td-bold" style="white-space:nowrap">Minute 5</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Open war room bridge. Post bridge link in #incidents. Assign roles. Create Jira ticket in APPSUP.</td></tr>
+              <tr><td class="td-bold" style="white-space:nowrap">Min 5–15</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Contact relevant third party if applicable (Exigo / GetStream / Contentful). State "SEV 1, revenue at risk" in opening sentence.</td></tr>
+              <tr><td class="td-bold" style="white-space:nowrap">Minute 15</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">SMS Alan with one-paragraph status. Update public status page. Send first rep communication.</td></tr>
+              <tr><td class="td-bold" style="white-space:nowrap">Every 15 min</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Update #incidents, status page, and rep channel — even if no update. Silence destroys trust.</td></tr>
+              <tr><td class="td-bold" style="white-space:nowrap">Every 60 min</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Full SMS to Alan: what's happening, what's being done, ETA, whether action is needed from them.</td></tr>
+              <tr><td class="td-bold" style="color:var(--green);white-space:nowrap">Resolution</td><td class="td-muted">Douglas</td><td style="font-size:.78rem">Confirm resolution by testing personally. Send all-clear. Update Jira to Resolved. Schedule postmortem within 48 hours.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head"><div class="section-icon">🎯</div><div class="section-head-text"><h3>Role Split During an Incident</h3><span>Stay in your lane — it is what makes the team fast</span></div></div>
+      <div class="section-body no-pad">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Douglas owns</th><th>Isaac / Engineering owns</th></tr></thead>
+            <tbody>
+              <tr><td style="font-size:.78rem">Incident command — declares severity, runs war room, closes incident</td><td style="font-size:.78rem">Technical diagnosis — what failed and why</td></tr>
+              <tr><td style="font-size:.78rem">All external communication — reps, Alan, status page</td><td style="font-size:.78rem">Technical fix — full autonomy on recovery decisions</td></tr>
+              <tr><td style="font-size:.78rem">Third-party vendor escalation — all calls to Exigo, GetStream, Contentful</td><td style="font-size:.78rem">Code deployments and hotfixes</td></tr>
+              <tr><td style="font-size:.78rem">Jira ticket lifecycle — creates, updates, resolves</td><td style="font-size:.78rem">Root cause analysis</td></tr>
+              <tr><td style="font-size:.78rem">Postmortem facilitation and action item tracking</td><td style="font-size:.78rem">Provides technical timeline for postmortem</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 04 SOPs ── -->
+  <div class="pane" id="pane-sops">
+    <div class="page-header">
+      <h2>Incident SOPs</h2>
+      <p>Standard Operating Procedures for each severity level. Click any card to open the full SOP. Follow every step in order — do not improvise during a live incident.</p>
+    </div>
+    <div class="play-grid">
+      <div class="play-card" onclick="openModal('sev1')">
+        <div class="play-emoji">🔴</div>
+        <div class="play-title">SEV 1 — Critical</div>
+        <div class="play-desc">Complete step-by-step SOP for critical incidents. Revenue or a critical business function is at risk. Phases: Immediate actions (0–5 min), Escalation (5–15 min), Ongoing updates, Resolution.</div>
+        <div class="play-footer"><span class="play-tag">SEV 1 · Critical</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('sev1')">Open SOP →</button></div>
+      </div>
+      <div class="play-card" onclick="openModal('sev2')">
+        <div class="play-emoji">🟡</div>
+        <div class="play-title">SEV 2 — Major</div>
+        <div class="play-desc">SOP for major degradation where a workaround may exist. Revenue is not immediately at risk but this can escalate. Includes escalation trigger criteria to SEV 1.</div>
+        <div class="play-footer"><span class="play-tag">SEV 2 · Major</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('sev2')">Open SOP →</button></div>
+      </div>
+      <div class="play-card" onclick="openModal('sev3')">
+        <div class="play-emoji">🔵</div>
+        <div class="play-title">SEV 3 — Minor</div>
+        <div class="play-desc">SOP for minor issues with a workaround available and no revenue impact. Covers Jira ticket creation, rep acknowledgment, triage cadence, and upgrade criteria.</div>
+        <div class="play-footer"><span class="play-tag">SEV 3 · Minor</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('sev3')">Open SOP →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 05 PLAYBOOKS ── -->
+  <div class="pane" id="pane-playbooks">
+    <div class="page-header">
+      <h2>Playbooks</h2>
+      <p>Scenario-specific response guides. Each playbook covers confirmation steps, minute-by-minute execution, vendor scripts, and resolution. Click any card to open the full playbook.</p>
+    </div>
+    <div class="play-grid">
+      <div class="play-card" onclick="openModal('orders')">
+        <div class="play-emoji">📦</div>
+        <div class="play-title">Orders System Down</div>
+        <div class="play-desc">CODES-O · SEV 1 default · Vendor: Exigo. This is the highest-priority incident at BombParty. Minute-by-minute execution plan + word-for-word Exigo escalation script.</div>
+        <div class="play-footer"><span class="play-tag">CODES-O · Exigo</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('orders')">Open Playbook →</button></div>
+      </div>
+      <div class="play-card" onclick="openModal('stream')">
+        <div class="play-emoji">📡</div>
+        <div class="play-title">Live Stream Down</div>
+        <div class="play-desc">CODES-C · SEV 1 (down) or SEV 2 (degraded) · Vendor: GetStream. Includes severity determination guide, SEV 1 and SEV 2 execution paths, and GetStream escalation script.</div>
+        <div class="play-footer"><span class="play-tag">CODES-C · GetStream</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('stream')">Open Playbook →</button></div>
+      </div>
+      <div class="play-card" onclick="openModal('warroom')">
+        <div class="play-emoji">🏛️</div>
+        <div class="play-title">War Room Procedures</div>
+        <div class="play-desc">Applies to all SEV 1 incidents. Roles (Commander, Technical Lead, Scribe, Vendor Liaison), 6 war room rules, 15-minute update template, and closing criteria.</div>
+        <div class="play-footer"><span class="play-tag">All SEV 1</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('warroom')">Open Playbook →</button></div>
+      </div>
+      <div class="play-card" onclick="openModal('postmortem')">
+        <div class="play-emoji">📝</div>
+        <div class="play-title">Postmortem Process</div>
+        <div class="play-desc">Required for all SEV 1 incidents. Due within 48 hours. Timeline, meeting structure, full postmortem template, and action item tracking process in Jira.</div>
+        <div class="play-footer"><span class="play-tag">SEV 1 required · SEV 2 recommended</span><button class="btn btn-navy btn-sm" onclick="event.stopPropagation();openModal('postmortem')">Open Playbook →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 06 ESCALATION ── -->
+  <div class="pane" id="pane-escalation">
+    <div class="page-header">
+      <h2>Escalation</h2>
+      <p>All contact info must be confirmed before July 9 and verified quarterly. One voice to the executive — only Douglas contacts Alan during an incident.</p>
+    </div>
+
+    <div class="alert" style="margin-bottom:1.25rem"><strong>One voice to the executive.</strong> Only Douglas contacts Alan during an incident. Isaac and engineering do not contact Alan directly. One voice, one message, one source of truth.</div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">👥</div><div class="section-head-text"><h3>Internal Contacts & Escalation Order</h3><span>Follow this escalation order exactly — every time</span></div></div>
+      <div class="section-body">
+        <div class="contact-grid" style="margin-bottom:1.25rem">
+          <div class="contact-card">
+            <div class="contact-card-header"><div class="contact-avatar">DF</div><div><div class="contact-name">Douglas Fernandes</div><div class="contact-role">Incident Commander · Technical Config & Delivery Lead</div></div></div>
+            <div class="contact-row"><span class="contact-row-label">Slack</span><span class="contact-row-val">@douglas</span></div>
+            <div class="contact-row"><span class="contact-row-label">Email</span><span class="contact-row-val">douglas@bombparty.com</span></div>
+            <div class="contact-row"><span class="contact-row-label">SMS</span><span class="contact-row-val"><span class="ef" data-key="douglas-sms" contenteditable="true"></span></span></div>
+            <div class="notify-badge">Always first to know</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card-header"><div class="contact-avatar">IS</div><div><div class="contact-name">Isaac</div><div class="contact-role">Engineering Lead — all technical fixes</div></div></div>
+            <div class="contact-row"><span class="contact-row-label">Slack</span><span class="contact-row-val">@isaac</span></div>
+            <div class="contact-row"><span class="contact-row-label">SMS</span><span class="contact-row-val"><span class="ef" data-key="isaac-sms2" contenteditable="true"></span></span></div>
+            <div class="contact-row"><span class="contact-row-label">On-call</span><span class="contact-row-val"><span class="ef" data-key="isaac-oncall" contenteditable="true"></span></span></div>
+            <div class="notify-badge" style="background:rgba(225,93,93,0.10);color:#B91C1C">Min 0 — all SEV 1 & 2</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card-header"><div class="contact-avatar">AL</div><div><div class="contact-name">Alan</div><div class="contact-role">VP Digital Products & Platforms</div></div></div>
+            <div class="contact-row"><span class="contact-row-label">Slack</span><span class="contact-row-val">@alan</span></div>
+            <div class="contact-row"><span class="contact-row-label">SMS</span><span class="contact-row-val"><span class="ef" data-key="alan-sms2" contenteditable="true"></span></span></div>
+            <div class="notify-badge" style="background:rgba(240,182,60,0.12);color:#78350F">Min 15 — SEV 1 only. Never SEV 2/3.</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card-header"><div class="contact-avatar">KF</div><div><div class="contact-name">Kristin Fritz</div><div class="contact-role">Delivery Partner — co-PM</div></div></div>
+            <div class="contact-row"><span class="contact-row-label">Slack</span><span class="contact-row-val">@kristin</span></div>
+            <div class="notify-badge">Awareness only on SEV 1</div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Step</th><th>Who</th><th>How</th><th>Trigger</th></tr></thead>
+            <tbody>
+              <tr><td class="td-bold">1</td><td>Isaac</td><td class="td-muted">SMS + Slack</td><td>Minute 0 — all SEV 1 & 2</td></tr>
+              <tr><td class="td-bold">2</td><td>On-call engineer</td><td class="td-muted">SMS</td><td>Minute 0 — all SEV 1</td></tr>
+              <tr><td class="td-bold">3</td><td>War room opened</td><td class="td-muted">Bridge link in #incidents</td><td>Minute 5 — all SEV 1</td></tr>
+              <tr><td class="td-bold">4</td><td>Third-party vendor</td><td class="td-muted">Phone call</td><td>Minute 5 if applicable</td></tr>
+              <tr><td class="td-bold">5</td><td>Alan</td><td class="td-muted">SMS</td><td>Minute 15 — SEV 1 only</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head"><div class="section-icon">🔌</div><div class="section-head-text"><h3>Third-Party Contacts</h3><span>All bracketed info must be filled in before July 9</span></div></div>
+      <div class="section-body">
+        <div class="alert amber">All bracketed contact information below must be filled in before July 9. Do not launch without confirmed emergency contacts for Exigo, GetStream, and Contentful.</div>
+        <div class="g3">
+          <div>
+            <div style="font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--line2)">Exigo — Orders & Commissions</div>
+            <div class="contact-row"><span class="contact-row-label">Support line</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Email</span><span class="contact-row-val">support@exigo.com</span></div>
+            <div class="contact-row"><span class="contact-row-label">Portal URL</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Account manager</span><span class="contact-row-val">[NAME · PHONE]</span></div>
+            <div class="contact-row"><span class="contact-row-label">After-hours</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Status page</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">CODES</span><span class="contact-row-val">CODES-O</span></div>
+          </div>
+          <div>
+            <div style="font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--line2)">GetStream — Live Streaming</div>
+            <div class="contact-row"><span class="contact-row-label">Support line</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Email</span><span class="contact-row-val">support@getstream.io</span></div>
+            <div class="contact-row"><span class="contact-row-label">Portal URL</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Customer success</span><span class="contact-row-val">[NAME · PHONE]</span></div>
+            <div class="contact-row"><span class="contact-row-label">After-hours</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Status page</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">CODES</span><span class="contact-row-val">CODES-C</span></div>
+          </div>
+          <div>
+            <div style="font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--line2)">Contentful — CMS & Content</div>
+            <div class="contact-row"><span class="contact-row-label">Support line</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Email</span><span class="contact-row-val">support@contentful.com</span></div>
+            <div class="contact-row"><span class="contact-row-label">Portal URL</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">Account executive</span><span class="contact-row-val">[NAME · PHONE]</span></div>
+            <div class="contact-row"><span class="contact-row-label">After-hours</span><span class="contact-row-val">[FILL IN]</span></div>
+            <div class="contact-row"><span class="contact-row-label">CODES</span><span class="contact-row-val">CODES-C / CODES-D</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 07 TEMPLATES ── -->
+  <div class="pane" id="pane-templates">
+    <div class="page-header">
+      <h2>Status Update Templates</h2>
+      <p>Use these word for word. Only personalize the bracketed fields. Consistency in communication builds trust — do not ad-lib during an incident.</p>
+    </div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">🔴</div><div class="section-head-text"><h3>SEV 1 Templates</h3><span>#incidents + rep communication channel</span></div></div>
+      <div class="section-body">
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.5rem">Initial Declaration</div>
+        <div class="template-box" id="t1">@here — [TIME] | SEV 1 Declared
+We are currently experiencing an issue with [SYSTEM].
+Impact: [What users cannot do right now]
+Status: Our team is actively investigating.
+Next update: [TIME + 15 min]
+Jira: APPSUP-[TICKET NUMBER]<button class="copy-btn" onclick="copyTemplate('t1',this)">Copy</button></div>
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.5rem;margin-top:1rem">15-Minute Progress Update</div>
+        <div class="template-box" id="t2">[TIME] — Update #[N] — SEV 1 CODES-[X]
+Status: [Investigating / Fix in progress / Fix deployed — monitoring]
+What we know: [One sentence on current understanding of the issue]
+What we're doing: [What engineering is actively working on right now]
+ETA: [Unknown / Approximately X minutes / Deploying fix now]
+Next update: [TIME + 15 min]<button class="copy-btn" onclick="copyTemplate('t2',this)">Copy</button></div>
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.5rem;margin-top:1rem">Alan SMS Update (keep under 3 sentences)</div>
+        <div class="template-box" id="t3">[TIME] — SEV 1 update. [SYSTEM] has been down for [X] minutes. Isaac is [investigating / deploying a fix]. ETA: [unknown / X min]. No action needed from you. Next update in 15 min.<button class="copy-btn" onclick="copyTemplate('t3',this)">Copy</button></div>
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.5rem;margin-top:1rem">All-Clear — Resolution</div>
+        <div class="template-box" id="t4">[TIME] — ALL CLEAR | SEV 1 Resolved
+[SYSTEM] has been restored. All services are operating normally.
+Outage duration: [X hours / minutes]
+Root cause: [Brief non-technical explanation]
+We apologize for the disruption. A full postmortem will be completed within 48 hours.
+Thank you for your patience. — Douglas Fernandes, Application Support<button class="copy-btn" onclick="copyTemplate('t4',this)">Copy</button></div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="section-block" style="margin-bottom:0">
+        <div class="section-head"><div class="section-icon">🟡</div><div class="section-head-text"><h3>SEV 2 — Incident Notification</h3><span>#incidents · every 60 minutes</span></div></div>
+        <div class="section-body">
+          <div class="template-box" id="t5">[TIME] — SEV 2 | [SYSTEM] degraded
+We are experiencing degraded performance with [SYSTEM].
+Impact: [What is slow or partially unavailable]
+Workaround: [Workaround if available, or "No workaround at this time"]
+Status: Engineering is investigating.
+Updates every 60 minutes.
+Next update: [TIME + 60 min]<button class="copy-btn" onclick="copyTemplate('t5',this)">Copy</button></div>
+        </div>
+      </div>
+      <div class="section-block" style="margin-bottom:0">
+        <div class="section-head"><div class="section-icon">🔵</div><div class="section-head-text"><h3>SEV 3 — Rep Acknowledgment</h3><span>Reply to the reporter directly</span></div></div>
+        <div class="section-body">
+          <div class="template-box" id="t6">Hi [Name] — thanks for flagging this.
+We have logged it as a known issue (APPSUP-[TICKET NUMBER]) and our engineering team has it in queue.
+If this starts affecting your ability to [place orders / access reports / run streams], let me know immediately and we will escalate.
+— Douglas<button class="copy-btn" onclick="copyTemplate('t6',this)">Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 08 READINESS ── -->
+  <div class="pane" id="pane-readiness">
+    <div class="page-header">
+      <h2>Readiness</h2>
+      <p>Hard deadline: 2 simulations must be completed before July 9. Schedule them in Week 3. Allow at least 5 business days between the final simulation and launch for corrective actions to be addressed.</p>
+    </div>
+
+    <div class="alert red" style="margin-bottom:1.25rem"><strong>Hard deadline:</strong> Both simulations must be completed before July 9. Schedule them by Week 3.</div>
+
+    <div class="section-block" style="margin-bottom:1.25rem">
+      <div class="section-head"><div class="section-icon">🎯</div><div class="section-head-text"><h3>Emergency Simulations</h3><span>Facilitator: Douglas Fernandes · Technical lead: Isaac</span></div></div>
+      <div class="section-body">
+        <div class="sim-card">
+          <div class="sim-header">
+            <div><div style="font-size:.85rem;font-weight:700;color:var(--navy)">Simulation 1 — Orders System Down</div><div style="font-size:.73rem;color:var(--navy);opacity:.45;margin-top:.2rem">CODES-O · SEV 1 scenario</div></div>
+            <span class="sim-status pending" id="sim1-status">Pending</span>
+          </div>
+          <div class="g2" style="margin-bottom:1rem">
+            <div><label style="font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.4;display:block;margin-bottom:.35rem">Target Date</label><input type="date" id="sim1-date" style="border:1.5px solid rgba(15,48,83,0.15);border-radius:8px;padding:.5rem .8rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--charcoal);background:white;outline:none;width:100%" onchange="updateSimDate(1)"></div>
+            <div><label style="font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.4;display:block;margin-bottom:.35rem">Status</label>
+            <select id="sim1-sel" onchange="updateSimStatus(1)" style="border:1.5px solid rgba(15,48,83,0.15);border-radius:8px;padding:.5rem .8rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--charcoal);background:white;outline:none;width:100%"><option value="pending">Not started</option><option value="done">Completed</option></select></div>
+          </div>
+          <ul class="checklist" id="sim1-checks">
+            <li class="check-item" id="li-s1-0"><div class="chk" onclick="toggleCheck('s1-0')"></div><span class="chk-text">Scenario injected in #sim-incidents by Douglas</span></li>
+            <li class="check-item" id="li-s1-1"><div class="chk" onclick="toggleCheck('s1-1')"></div><span class="chk-text">SEV 1 SOP executed step by step (no real external pages)</span></li>
+            <li class="check-item" id="li-s1-2"><div class="chk" onclick="toggleCheck('s1-2')"></div><span class="chk-text">War room opened and roles assigned</span></li>
+            <li class="check-item" id="li-s1-3"><div class="chk" onclick="toggleCheck('s1-3')"></div><span class="chk-text">Exigo escalation script rehearsed</span></li>
+            <li class="check-item" id="li-s1-4"><div class="chk" onclick="toggleCheck('s1-4')"></div><span class="chk-text">15-minute update clock maintained throughout</span></li>
+            <li class="check-item" id="li-s1-5"><div class="chk" onclick="toggleCheck('s1-5')"></div><span class="chk-text">30-minute debrief completed — gaps documented in APPSUP Jira tickets</span></li>
+            <li class="check-item" id="li-s1-6"><div class="chk" onclick="toggleCheck('s1-6')"></div><span class="chk-text">Debrief output page created in Confluence</span></li>
+          </ul>
+        </div>
+        <div class="sim-card" style="margin-bottom:0">
+          <div class="sim-header">
+            <div><div style="font-size:.85rem;font-weight:700;color:var(--navy)">Simulation 2 — Live Stream Degraded</div><div style="font-size:.73rem;color:var(--navy);opacity:.45;margin-top:.2rem">CODES-C · SEV 1 scenario</div></div>
+            <span class="sim-status pending" id="sim2-status">Pending</span>
+          </div>
+          <div class="g2" style="margin-bottom:1rem">
+            <div><label style="font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.4;display:block;margin-bottom:.35rem">Target Date</label><input type="date" id="sim2-date" style="border:1.5px solid rgba(15,48,83,0.15);border-radius:8px;padding:.5rem .8rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--charcoal);background:white;outline:none;width:100%" onchange="updateSimDate(2)"></div>
+            <div><label style="font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.4;display:block;margin-bottom:.35rem">Status</label>
+            <select id="sim2-sel" onchange="updateSimStatus(2)" style="border:1.5px solid rgba(15,48,83,0.15);border-radius:8px;padding:.5rem .8rem;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--charcoal);background:white;outline:none;width:100%"><option value="pending">Not started</option><option value="done">Completed</option></select></div>
+          </div>
+          <ul class="checklist">
+            <li class="check-item" id="li-s2-0"><div class="chk" onclick="toggleCheck('s2-0')"></div><span class="chk-text">Scenario injected in #sim-incidents by Douglas</span></li>
+            <li class="check-item" id="li-s2-1"><div class="chk" onclick="toggleCheck('s2-1')"></div><span class="chk-text">SEV 1 SOP executed step by step (no real external pages)</span></li>
+            <li class="check-item" id="li-s2-2"><div class="chk" onclick="toggleCheck('s2-2')"></div><span class="chk-text">War room opened and roles assigned</span></li>
+            <li class="check-item" id="li-s2-3"><div class="chk" onclick="toggleCheck('s2-3')"></div><span class="chk-text">GetStream escalation script rehearsed</span></li>
+            <li class="check-item" id="li-s2-4"><div class="chk" onclick="toggleCheck('s2-4')"></div><span class="chk-text">Stream host notification rehearsed</span></li>
+            <li class="check-item" id="li-s2-5"><div class="chk" onclick="toggleCheck('s2-5')"></div><span class="chk-text">30-minute debrief completed — gaps documented in APPSUP Jira tickets</span></li>
+            <li class="check-item" id="li-s2-6"><div class="chk" onclick="toggleCheck('s2-6')"></div><span class="chk-text">Debrief output page created in Confluence</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-head"><div class="section-icon">🎯</div><div class="section-head-text"><h3>Role Boundaries</h3><span>Review whenever you are unsure what falls on your plate vs. engineering's</span></div></div>
+      <div class="section-body">
+        <div class="alert" style="margin-bottom:1rem"><strong>The test:</strong> Am I communicating, commanding, or escalating? → Douglas. Am I diagnosing, fixing, or deploying? → Isaac.</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Area</th><th>Douglas owns</th><th>Isaac / Engineering owns</th></tr></thead>
+            <tbody>
+              <tr><td class="td-bold">Incident command</td><td style="font-size:.77rem">Declares severity. Runs war room. Closes incident.</td><td style="font-size:.77rem">Reports status to Douglas. Does not command.</td></tr>
+              <tr><td class="td-bold">External communication</td><td style="font-size:.77rem">All rep, Alan, and public updates. No exceptions.</td><td style="font-size:.77rem">Does not communicate externally during an incident.</td></tr>
+              <tr><td class="td-bold">Third-party escalation</td><td style="font-size:.77rem">Makes all vendor calls. Owns the vendor relationship.</td><td style="font-size:.77rem">May join a vendor call for technical diagnosis only.</td></tr>
+              <tr><td class="td-bold">Technical fix</td><td style="font-size:.77rem">Does NOT diagnose or fix. May ask "what's happening" but never "have you tried X?"</td><td style="font-size:.77rem">Full autonomy on all technical decisions and recovery procedures.</td></tr>
+              <tr><td class="td-bold">Jira ticket</td><td style="font-size:.77rem">Creates and manages the ticket throughout the full lifecycle.</td><td style="font-size:.77rem">May add technical comments but does not own the ticket.</td></tr>
+              <tr><td class="td-bold">Postmortem</td><td style="font-size:.77rem">Facilitates. Owns action item tracking. Writes communication timeline.</td><td style="font-size:.77rem">Provides technical timeline. Owns technical action items.</td></tr>
+              <tr><td class="td-bold">Alan notifications</td><td style="font-size:.77rem">Only Douglas contacts Alan during an incident.</td><td style="font-size:.77rem">Does not contact Alan directly during an incident.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line2)">
+          <div style="font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);opacity:.4;margin-bottom:.6rem">Things Douglas explicitly does NOT do during an incident</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem">
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Diagnose or troubleshoot technical issues</div>
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Log into systems to investigate errors</div>
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Suggest technical fixes to engineering</div>
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Contact Alan more than once per 60-min window</div>
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Communicate externally before internal confirmation</div>
+            <div style="font-size:.77rem;color:var(--navy);opacity:.55;display:flex;gap:.4rem">❌ Make BC/DR activation decisions unilaterally</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════ DOC MODAL ════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeOutside(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-hdr-left">
+        <div class="modal-icon" id="m-icon"></div>
+        <div><h3 id="m-title"></h3><div class="tag" id="m-tag"></div></div>
+      </div>
+      <button class="btn-ghost" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="m-body"></div>
+    <div class="modal-ftr">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
+      <button class="btn btn-navy btn-sm" onclick="window.print()">Print / Save as PDF →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ JAVASCRIPT ════════════════════════════════ -->
+<script>
+/* ── TABS ── */
+document.getElementById("nav-date").textContent = new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+document.getElementById("tab-bar").addEventListener("click",e=>{
+  const btn=e.target.closest(".tab-btn"); if(!btn) return;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("pane-"+btn.dataset.pane).classList.add("active");
+});
+
+/* ── WAR ROOM ── */
+function updateWarRoom(){
+  const v=document.getElementById("war-room-input").value.trim();
+  const d=document.getElementById("war-room-display");
+  if(v){d.textContent=v;d.className="war-room-url set";}
+  else{d.textContent="No URL saved yet";d.className="war-room-url";}
+  GH.set('war-room-url', v);
+}
+function launchWarRoom(){
+  const v=document.getElementById("war-room-input").value.trim();
+  if(v) window.open(v,"_blank");
+  else alert("Please paste your war room bridge URL first.");
+}
+/* Restore war room URL on load */
+(function(){
+  const saved = GH.get('war-room-url');
+  if (saved) {
+    document.getElementById("war-room-input").value = saved;
+    document.getElementById("war-room-display").textContent = saved;
+    document.getElementById("war-room-display").className = "war-room-url set";
+  }
+})();
+
+/* ── PAGE TREE ── */
+const pageTree=[
+  {title:"Application Support Hub (Home)",parent:"Root — Space Home",priority:"Build first"},
+  {title:"CODES Framework",parent:"Home",priority:"Week 1"},
+  {title:"Severity Levels & SLAs",parent:"Home",priority:"Week 1"},
+  {title:"Incident SOPs",parent:"Home",priority:"Week 1"},
+  {title:"SEV 1 — Standard Operating Procedure",parent:"Incident SOPs",priority:"Week 1"},
+  {title:"SEV 2 — Standard Operating Procedure",parent:"Incident SOPs",priority:"Week 1"},
+  {title:"SEV 3 — Standard Operating Procedure",parent:"Incident SOPs",priority:"Week 1"},
+  {title:"Playbooks",parent:"Home",priority:"Week 1"},
+  {title:"Orders System Down",parent:"Playbooks",priority:"Week 1"},
+  {title:"Live Stream Down",parent:"Playbooks",priority:"Week 1"},
+  {title:"War Room Procedures",parent:"Playbooks",priority:"Week 1"},
+  {title:"Postmortem Process",parent:"Playbooks",priority:"Week 1"},
+  {title:"Escalation",parent:"Home",priority:"Week 1"},
+  {title:"Third-Party Contacts",parent:"Escalation",priority:"Week 1"},
+  {title:"Internal Contacts",parent:"Escalation",priority:"Week 1"},
+  {title:"Communication",parent:"Home",priority:"Week 2"},
+  {title:"Status Update Templates",parent:"Communication",priority:"Week 2"},
+  {title:"Readiness",parent:"Home",priority:"Pre-July 9"},
+  {title:"Emergency Simulations",parent:"Readiness",priority:"Pre-July 9"},
+  {title:"Role Boundaries",parent:"Readiness",priority:"Week 1"},
+];
+/* ── PAGE TREE with status cycling + persistence ── */
+const PT_CYCLE = ['notstarted','inprogress','done'];
+const PT_LABELS = {'notstarted':'Not Started','inprogress':'In Progress','done':'Done ✓'};
+
+document.getElementById("page-tree").innerHTML = pageTree.map((p,i) => {
+  const savedSt = GH.get('pt-status-'+i) || 'notstarted';
+  return `<tr>
+    <td class="td-bold" style="padding-left:${p.parent==="Root — Space Home"?"1rem":p.parent==="Home"?"2rem":"3rem"}">${p.parent!=="Root — Space Home"&&p.parent!=="Home"?'↳ ':''} ${p.title}</td>
+    <td class="td-muted">${p.parent}</td>
+    <td><span class="badge ${p.priority==="Build first"?"badge-red":p.priority==="Week 1"?"badge-sev2":"badge-sev3"}">${p.priority}</span></td>
+    <td><button class="pt-status ${savedSt}" onclick="cyclePtStatus(this,${i})">${PT_LABELS[savedSt]}</button></td>
+  </tr>`;
+}).join("");
+
+function cyclePtStatus(btn, i) {
+  const cur = PT_CYCLE.indexOf(btn.classList[1]);
+  const next = PT_CYCLE[(cur+1) % PT_CYCLE.length];
+  btn.className = 'pt-status ' + next;
+  btn.textContent = PT_LABELS[next];
+  GH.set('pt-status-'+i, next);
+  showToast('Status saved ✓');
+}
+
+/* ── COPY TEMPLATE ── */
+function copyTemplate(id,btn){
+  const box=document.getElementById(id);
+  const txt=box.innerText.replace(btn.innerText,"").trim();
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent="Copied!"; btn.classList.add("copied");
+    setTimeout(()=>{btn.textContent="Copy";btn.classList.remove("copied");},2000);
+  });
+}
+
+/* ── CHECKLIST with persistence ── */
+function toggleCheck(id){
+  const el=document.querySelector(`#li-${id} .chk`), li=document.getElementById("li-"+id);
+  const isDone = el.classList.toggle("done");
+  li.classList.toggle("done-item", isDone);
+  GH.set('chk-'+id, isDone ? '1' : '0');
+}
+/* Restore checklist states */
+document.querySelectorAll('.check-item').forEach(li => {
+  const chk = li.querySelector('.chk');
+  if (!chk) return;
+  const onclick = chk.getAttribute('onclick')||'';
+  const m = onclick.match(/toggleCheck\('([^']+)'\)/);
+  if (!m) return;
+  const id = m[1];
+  if (GH.get('chk-'+id) === '1') {
+    chk.classList.add('done');
+    li.classList.add('done-item');
+  }
+});
+
+/* ── SIMULATIONS with persistence ── */
+function updateSimStatus(n){
+  const sel=document.getElementById(`sim${n}-sel`).value;
+  const badge=document.getElementById(`sim${n}-status`);
+  badge.className="sim-status "+(sel==="done"?"done":"pending");
+  badge.textContent=sel==="done"?"Completed":"Pending";
+  GH.set('sim'+n+'-status', sel);
+}
+function updateSimDate(n){
+  GH.set('sim'+n+'-date', document.getElementById('sim'+n+'-date').value);
+}
+/* Restore sim states */
+[1,2].forEach(n => {
+  const st = GH.get('sim'+n+'-status');
+  const dt = GH.get('sim'+n+'-date');
+  if (st) { document.getElementById('sim'+n+'-sel').value=st; updateSimStatus(n); }
+  if (dt) { document.getElementById('sim'+n+'-date').value=dt; }
+});
+
+/* ── MODAL ── */
+const MODALS={
+  sev1:{icon:"🔴",title:"SEV 1 — Standard Operating Procedure",tag:"SEV 1 · Critical · Response owner: Douglas Fernandes",body:`
+    <div class="m-section"><div class="m-alert">This is a SEV 1. Revenue or a critical business function is at risk. Follow every step in order. Do not skip. Do not improvise.</div></div>
+    <div class="m-section"><h4>Phase 1 — Immediate Actions (Minutes 0–5)</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Confirm the incident</div><div class="m-step-desc">Can you reproduce it? Is it affecting more than one user? Check third-party status pages. Do not declare SEV 1 based on a single complaint without confirmation.</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">SMS Isaac immediately</div><div class="m-step-desc">"[TIME] — [SYSTEM] is down. SEV 1 declared. War room in 5 min: [BRIDGE URL]. Call me if you don't see this." Do not wait for a reply before moving on.</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">SMS on-call engineer</div><div class="m-step-desc">Same message format as Isaac.</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">Post in #incidents Slack</div><div class="m-step-desc">"@here SEV 1 DECLARED — [SYSTEM] is [down/degraded]. War room bridge: [URL]. [TIME]"</div></div></div>
+      <div class="m-step"><div class="m-step-num">5</div><div class="m-step-body"><div class="m-step-title">Open the war room bridge</div><div class="m-step-desc">Do not wait for everyone — start speaking, others join. See War Room Procedures playbook.</div></div></div>
+      <div class="m-step"><div class="m-step-num">6</div><div class="m-step-body"><div class="m-step-title">Create Jira ticket in APPSUP</div><div class="m-step-desc">Type = Bug · Label = SEV1 + CODES label · Component = SEV1-Incidents · Assignee = Douglas · Watchers = Isaac + Alan. Keep this ticket updated throughout.</div></div></div>
+    </div>
+    <div class="m-section"><h4>Phase 2 — Escalation (Minutes 5–15)</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Contact the relevant third party if applicable</div><div class="m-step-desc">Orders down = call Exigo. Stream down = call GetStream. Content broken = call Contentful. Open with: "This is Douglas Fernandes, Bomb Party. We have a SEV 1 incident — [system] is down. Revenue is at risk. I need your on-call engineer now."</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">SMS Alan at minute 15</div><div class="m-step-desc">"[TIME] — SEV 1: [SYSTEM] is [down/degraded]. Isaac is on it. War room is live. ETA: [unknown or X min]. Updating you every 15 min. No action needed from you yet."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">Update the public status page</div><div class="m-step-desc">"We are aware of an issue with [system]. Our team is actively working on a fix. We will provide updates every 15 minutes."</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">Send rep communication</div><div class="m-step-desc">Use the SEV 1 initial template. See Templates tab.</div></div></div>
+    </div>
+    <div class="m-section"><h4>Phase 3 — Ongoing (Every 15 Minutes)</h4>
+      <div class="m-note">Update all channels: #incidents Slack, public status page, rep communication channel. Even with no change: "[TIME] — No change. Engineering is still actively investigating. ETA unknown. Next update in 15 min."<br>Update Alan via SMS every 60 minutes with a full one-paragraph status.</div>
+    </div>
+    <div class="m-section"><h4>Phase 4 — Resolution</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Confirm resolution yourself</div><div class="m-step-desc">Ask Isaac: is the fix deployed and stable? Run a manual test. Do not declare resolved based on the engineer's word alone.</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">Send all-clear to all channels</div><div class="m-step-desc">"[TIME] — ALL CLEAR: [SYSTEM] is restored. All services operating normally. Outage duration: [X min/hours]. A full postmortem will follow within 48 hours."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">Update Jira ticket to Resolved</div><div class="m-step-desc">Add: incident duration, CODES category, resolution summary, and link to postmortem ticket.</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">Schedule postmortem within 48 hours</div><div class="m-step-desc">Create a new Jira ticket in APPSUP with Component = Postmortem. Link it to this incident ticket.</div></div></div>
+    </div>`},
+
+  sev2:{icon:"🟡",title:"SEV 2 — Standard Operating Procedure",tag:"SEV 2 · Major · Response owner: Douglas Fernandes",body:`
+    <div class="m-section"><div class="m-note">SEV 2 means a major feature is broken or degraded for a significant portion of users. Revenue is not immediately at risk, but this can escalate to SEV 1 if not resolved. Treat it with urgency — just without the war room yet.</div></div>
+    <div class="m-section"><h4>Response Steps</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Confirm and document</div><div class="m-step-desc">Capture the exact symptom, how many users are affected, and whether a workaround exists. Check third-party status pages.</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">Notify on-call engineer via Slack or SMS</div><div class="m-step-desc">"[TIME] — SEV 2: [SYSTEM] is [slow/degraded/partially unavailable]. Approx [X] users affected. No war room yet — let's assess. Join #incidents."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">Post in #incidents Slack</div><div class="m-step-desc">"SEV 2 in progress — [SYSTEM] is [degraded/unavailable for some]. [TIME]. On-call engineer notified. Monitoring closely."</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">Create Jira ticket in APPSUP</div><div class="m-step-desc">Label = SEV2 + CODES label. Component = SEV2-Incidents. Use the ticket as your incident log from this point.</div></div></div>
+      <div class="m-step"><div class="m-step-num">5</div><div class="m-step-body"><div class="m-step-title">If not resolved by minute 30</div><div class="m-step-desc">Post a formal SEV 2 declaration in #incidents and begin the 60-minute update cadence.</div></div></div>
+      <div class="m-step"><div class="m-step-num">6</div><div class="m-step-body"><div class="m-step-title">Every 60 minutes</div><div class="m-step-desc">Update #incidents and any affected teams with current state, what engineering is doing, ETA if known, and whether escalation to SEV 1 is being considered.</div></div></div>
+    </div>
+    <div class="m-section"><h4>Escalate to SEV 1 if:</h4>
+      <div class="m-note">Issue spreads to affect 10%+ of users · Revenue impact becomes clear · ETA exceeds 2 hours with no progress. Follow the SEV 1 SOP from step 1.</div>
+    </div>
+    <div class="m-section"><h4>Do NOT Page Alan</h4>
+      <div class="m-alert">Do not notify Alan for SEV 2 unless: the incident is escalating to SEV 1, it affects a high-profile live event, or it has been unresolved for more than 3 hours.</div>
+    </div>`},
+
+  sev3:{icon:"🔵",title:"SEV 3 — Standard Operating Procedure",tag:"SEV 3 · Minor · No alerting required",body:`
+    <div class="m-section"><div class="m-note">SEV 3 issues do not require immediate response. Create a Jira ticket, assign to backlog, and triage during normal business hours. No pages. No war rooms. No executive notifications.</div></div>
+    <div class="m-section"><h4>Confirm This Is a SEV 3</h4>
+      <p class="m-p">All four must be true:</p>
+      <ul class="checklist">
+        <li class="check-item" id="li-c1"><div class="chk" onclick="toggleCheck('c1')"></div><span class="chk-text">A workaround is available</span></li>
+        <li class="check-item" id="li-c2"><div class="chk" onclick="toggleCheck('c2')"></div><span class="chk-text">Revenue and enrollment are unaffected</span></li>
+        <li class="check-item" id="li-c3"><div class="chk" onclick="toggleCheck('c3')"></div><span class="chk-text">Fewer than 10% of users are affected</span></li>
+        <li class="check-item" id="li-c4"><div class="chk" onclick="toggleCheck('c4')"></div><span class="chk-text">It is a cosmetic or UI-only issue</span></li>
+      </ul>
+    </div>
+    <div class="m-section"><h4>Response Steps</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Create Jira ticket in APPSUP</div><div class="m-step-desc">Label = SEV3. Component = SEV3-Tickets. Priority = Low or Medium. Assign to backlog. Description must include: what's broken, who reported it, steps to reproduce, and whether a workaround exists.</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">Reply to the reporter</div><div class="m-step-desc">"Thanks for flagging — we have logged this as a known issue (APPSUP-[TICKET #]) and it is in our queue. If this worsens or starts blocking your work, let me know immediately."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">Triage at next sprint planning with Isaac</div><div class="m-step-desc">SEV 3 tickets are reviewed and prioritized weekly. They do not get pulled into the current sprint unless they become a pattern.</div></div></div>
+    </div>
+    <div class="m-section"><h4>When to Upgrade a SEV 3</h4>
+      <div class="m-alert">Same issue reported by 5+ reps in the same week · The workaround stops working · The issue starts affecting order placement, enrollment, or auth · Any single rep cannot do their core job because of this issue. When in doubt: upgrade.</div>
+    </div>`},
+
+  orders:{icon:"📦",title:"Playbook — Orders System Down",tag:"CODES-O · SEV 1 default · Vendor: Exigo",body:`
+    <div class="m-section"><div class="m-alert">Orders down = revenue is at risk right now. Do not troubleshoot alone. Do not wait to fully confirm. Declare SEV 1 immediately and work this playbook in parallel with Isaac's investigation.</div></div>
+    <div class="m-section"><h4>Step 1 — Confirm the Incident</h4>
+      <ul class="checklist">
+        <li class="check-item" id="li-o1"><div class="chk" onclick="toggleCheck('o1')"></div><span class="chk-text">Try to place a test order yourself — does it fail?</span></li>
+        <li class="check-item" id="li-o2"><div class="chk" onclick="toggleCheck('o2')"></div><span class="chk-text">Check Exigo status page: [FILL IN URL]</span></li>
+        <li class="check-item" id="li-o3"><div class="chk" onclick="toggleCheck('o3')"></div><span class="chk-text">Check #incidents Slack — has anyone else reported this?</span></li>
+        <li class="check-item" id="li-o4"><div class="chk" onclick="toggleCheck('o4')"></div><span class="chk-text">Determine scope: one rep, a region, or everyone?</span></li>
+      </ul>
+      <div class="m-alert" style="margin-top:.75rem">If you cannot place a test order: declare SEV 1 immediately. You can downgrade after. You cannot recover the revenue lost from waiting.</div>
+    </div>
+    <div class="m-section"><h4>Step 2 — Minute-by-Minute Execution</h4>
+      <table class="m-table">
+        <thead><tr><th>Time</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:var(--red);white-space:nowrap">Minute 0</td><td>SMS Isaac: "[TIME] — ORDERS DOWN. SEV 1 declared. War room: [BRIDGE URL]. Call me if you don't see this."</td></tr>
+          <tr><td style="font-weight:700;white-space:nowrap">Minute 0</td><td>Post in #incidents: "@here SEV 1 — ORDERS SYSTEM DOWN. [TIME]. War room: [BRIDGE URL]. Isaac paged."</td></tr>
+          <tr><td style="font-weight:700;white-space:nowrap">Minute 5</td><td>Call Exigo emergency support: [PHONE]. Open war room bridge. Create Jira ticket: APPSUP · Bug · Labels: SEV1, CODES-O · Component: SEV1-Incidents.</td></tr>
+          <tr><td style="font-weight:700;white-space:nowrap">Minute 15</td><td>SMS Alan: "[TIME] — SEV 1 Orders outage. Isaac and Exigo engaged. ETA: unknown. Updating every 15 min. No action needed from you yet." Update status page.</td></tr>
+          <tr><td style="font-weight:700;white-space:nowrap">Every 15 min</td><td>Update #incidents, status page, and rep channel. Never go silent — even "no change" must be communicated.</td></tr>
+          <tr><td style="font-weight:700;color:var(--green);white-space:nowrap">Resolution</td><td>Confirm by placing a test order yourself. Confirm in Exigo dashboard. Send all-clear. Schedule postmortem within 48 hours.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="m-section"><h4>Exigo Escalation Script (Word for Word)</h4>
+      <div class="m-war-template">Opening:
+"This is [your name] from Bomb Party. We are experiencing a complete orders outage. This is a SEV 1 incident. Revenue is actively at risk. I need your on-call engineer immediately."
+
+If placed on hold:
+"I cannot hold. This is an emergency. My direct number is [your phone]. Please call me back within 5 minutes or I will escalate to your account team."
+
+Exigo account manager: [NAME] — [PHONE] — [EMAIL]</div>
+    </div>`},
+
+  stream:{icon:"📡",title:"Playbook — Live Stream Down or Degraded",tag:"CODES-C · SEV 1 (down) · SEV 2 (degraded) · Vendor: GetStream",body:`
+    <div class="m-section"><div class="m-note">If the stream is completely down during a live event, this is SEV 1. If it is degraded, this is SEV 2. When in doubt, treat as SEV 1 and downgrade after assessment.</div></div>
+    <div class="m-section"><h4>First — Determine Severity</h4>
+      <table class="m-table">
+        <thead><tr><th>SEV 1 — Stream completely down</th><th>SEV 2 — Stream degraded</th></tr></thead>
+        <tbody>
+          <tr><td>Stream fails to start</td><td>Severe buffering for 10%+ of viewers</td></tr>
+          <tr><td>All viewers cannot connect</td><td>Quality auto-downgraded to unacceptable level</td></tr>
+          <tr><td>Stream cuts completely mid-event</td><td>Some geographic regions cannot connect</td></tr>
+          <tr><td>GetStream API returning 5xx errors across all streams</td><td>Intermittent drops for a significant audience segment</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="m-section"><h4>SEV 1 Execution — Stream Completely Down</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Confirm</div><div class="m-step-desc">Try joining the stream yourself. Check GetStream status page: [STATUS PAGE URL]. Check #incidents for other reports.</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">SMS Isaac</div><div class="m-step-desc">"[TIME] — LIVE STREAM DOWN. SEV 1 declared. War room: [BRIDGE URL]. Need you now."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">Post #incidents</div><div class="m-step-desc">"@here SEV 1 — LIVE STREAM DOWN. [TIME]. War room: [BRIDGE URL]."</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">Call GetStream emergency support</div><div class="m-step-desc">[PHONE]. Script: "This is Douglas Fernandes, Bomb Party. Our live stream is completely down during an active event. SEV 1. I need your on-call engineer. Stream ID: [ID]."</div></div></div>
+      <div class="m-step"><div class="m-step-num">5</div><div class="m-step-body"><div class="m-step-title">Notify stream host directly</div><div class="m-step-desc">"We are aware the stream is down. Our team and GetStream are working on it. We will update you every 10 minutes."</div></div></div>
+      <div class="m-step"><div class="m-step-num">6</div><div class="m-step-body"><div class="m-step-title">Page Alan at minute 15 if no ETA from GetStream or engineering</div><div class="m-step-desc">Use the Alan SMS template from the Templates tab.</div></div></div>
+    </div>
+    <div class="m-section"><h4>SEV 2 Execution — Degraded</h4>
+      <div class="m-note">Notify on-call via Slack (not SMS, no war room). Notify stream host. Contact GetStream via support ticket. Update #incidents every 60 minutes. Escalate to SEV 1 if the issue spreads.</div>
+    </div>`},
+
+  warroom:{icon:"🏛️",title:"War Room Procedures",tag:"All SEV 1 incidents · Commander: Douglas Fernandes",body:`
+    <div class="m-section"><div class="m-note">Bridge: [FILL IN WAR ROOM BRIDGE URL BEFORE JULY 9] · Slack: #incidents. Open the bridge at minute 5 for all SEV 1 incidents. Start immediately — do not wait for everyone.</div></div>
+    <div class="m-section"><h4>War Room Roles</h4>
+      <table class="m-table">
+        <thead><tr><th>Role</th><th>Owner</th><th>Responsibilities</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600">Incident Commander</td><td>Douglas</td><td>Runs the war room. Controls the agenda. Makes all escalation calls. Owns all external communication. Does NOT troubleshoot.</td></tr>
+          <tr><td style="font-weight:600">Technical Lead</td><td>Isaac</td><td>Owns the fix. Directs engineering resources. Reports progress every 10 minutes. Calls out blockers immediately.</td></tr>
+          <tr><td style="font-weight:600">Scribe</td><td>First available</td><td>Documents the timeline in real time in the Jira ticket. Records every action, every hypothesis tested, every update sent.</td></tr>
+          <tr><td style="font-weight:600">Vendor Liaison</td><td>Douglas</td><td>Manages the call with Exigo, GetStream, or Contentful. Single point of contact to vendor so Isaac stays focused on the fix.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="m-section"><h4>War Room Protocol — 6 Rules</h4>
+      <div class="m-step"><div class="m-step-num">1</div><div class="m-step-body"><div class="m-step-title">Open with a clear statement of the situation</div><div class="m-step-desc">"Here's what we know: [system] has been [down/degraded] since [time]. Approximately [N] users affected. CODES-[X]. Isaac's team is investigating. Our goal is resolution in under [X] minutes."</div></div></div>
+      <div class="m-step"><div class="m-step-num">2</div><div class="m-step-body"><div class="m-step-title">Set the 15-minute clock out loud</div><div class="m-step-desc">"Our next external update goes out in 15 minutes. I'll alert the room at minute 12 so we can pull the latest status."</div></div></div>
+      <div class="m-step"><div class="m-step-num">3</div><div class="m-step-body"><div class="m-step-title">One person speaks at a time</div><div class="m-step-desc">Commander controls the floor. If you have an update, say "I have an update." Do not talk over the technical lead.</div></div></div>
+      <div class="m-step"><div class="m-step-num">4</div><div class="m-step-body"><div class="m-step-title">No spectators</div><div class="m-step-desc">If you are on the bridge, you have a role. If you are observing only, stay in #incidents Slack.</div></div></div>
+      <div class="m-step"><div class="m-step-num">5</div><div class="m-step-body"><div class="m-step-title">Declare hypotheses, not diagnoses</div><div class="m-step-desc">Engineering says "We think it is X" — not "It is definitely X." This keeps the war room honest and prevents premature all-clears.</div></div></div>
+      <div class="m-step"><div class="m-step-num">6</div><div class="m-step-body"><div class="m-step-title">Commander closes the war room</div><div class="m-step-desc">Not engineering. The war room ends when the system is restored AND stable for 10 minutes, not when the fix is deployed.</div></div></div>
+    </div>
+    <div class="m-section"><h4>15-Minute Update Template</h4>
+      <div class="m-war-template">[TIME] Update #[N] — SEV 1 CODES-[X]
+Status: [Investigating / Fix in progress / Fix deployed — monitoring]
+Affected: [System name + approximate user count]
+What we're doing: [One sentence — what engineering is actively working on right now]
+ETA: [Unknown / Approximately X min / Fix being deployed now]
+Next update: [TIME + 15 min]</div>
+    </div>`},
+
+  postmortem:{icon:"📝",title:"Postmortem Process",tag:"Required: All SEV 1 · Recommended: SEV 2 with significant impact · Due: 48 hours",body:`
+    <div class="m-section"><div class="m-note">The goal of a postmortem is not to assign blame. It is to understand what happened, why it happened, and what changes will prevent it from happening again. Douglas facilitates. Isaac provides the technical input. All findings are tracked in Jira.</div></div>
+    <div class="m-section"><h4>Postmortem Timeline</h4>
+      <table class="m-table">
+        <thead><tr><th>When</th><th>Who</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td style="white-space:nowrap;font-weight:600">Resolution + 2 hrs</td><td>Douglas</td><td>Create postmortem Jira ticket in APPSUP. Component = Postmortem. Link to the original incident ticket. Notify Isaac to prepare the technical timeline.</td></tr>
+          <tr><td style="white-space:nowrap;font-weight:600">Within 24 hours</td><td>Douglas + Isaac</td><td>Isaac provides the technical timeline. Douglas compiles the communication timeline. Both go into the Confluence postmortem page.</td></tr>
+          <tr><td style="white-space:nowrap;font-weight:600">Within 48 hours</td><td>Douglas (facilitator)</td><td>Run the 30-minute postmortem meeting. Attendees: Douglas, Isaac, relevant engineers, Alan optional. Structure: timeline review, root cause, what worked, what didn't, action items.</td></tr>
+          <tr><td style="white-space:nowrap;font-weight:600">Within 72 hours</td><td>Douglas</td><td>Every action item becomes a Jira ticket with an owner and due date. No exceptions — if it doesn't have a ticket, it will not get done.</td></tr>
+          <tr><td style="white-space:nowrap;font-weight:600">Ongoing</td><td>Douglas</td><td>Track action items to completion. Report status to Alan in the weekly status report under "open postmortem actions."</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="m-section"><h4>Postmortem Template</h4>
+      <div class="m-template">Incident title: [APPSUP-XXX] System — Brief description
+Date/time: [Start time] — [End time] ([Duration])
+Severity: SEV 1 / SEV 2  |  CODES: CODES-X
+Impact: [Approx users affected, revenue impact if known, duration]
+
+SUMMARY (2 sentences max):
+[What happened and why in plain language]
+
+TIMELINE:
+[HH:MM] — Event or action taken
+[HH:MM] — Next event
+
+ROOT CAUSE:
+[Technical root cause — what specifically failed and why]
+
+WHAT WENT WELL:
+[ ] Communication was fast
+[ ] Engineering resolved quickly
+[ ] Third party responded within SLA
+
+WHAT WENT WRONG:
+[ ] [Detection was slow / Update cadence slipped / Vendor took too long]
+
+ACTION ITEMS:
+[ ] [Action] — Owner: [Name] — Due: [DATE] — Jira: APPSUP-[XX]</div>
+    </div>`}
+};
+
+function openModal(key){
+  const m=MODALS[key]; if(!m) return;
+  document.getElementById("m-icon").textContent=m.icon;
+  document.getElementById("m-title").textContent=m.title;
+  document.getElementById("m-tag").textContent=m.tag;
+  document.getElementById("m-body").innerHTML=m.body;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal(){document.getElementById("modal-overlay").classList.remove("open")}
+function closeOutside(e){if(e.target===document.getElementById("modal-overlay"))closeModal()}
+
+/* ══════════════════════════════════════════════════════
+   CONFIG — fill GH_TOKEN before pushing to GitHub
+   Repo must be PUBLIC so everyone can read without auth.
+   Token only needs: Contents → Read & Write on this repo.
+══════════════════════════════════════════════════════ */
+const GH_OWNER  = 'bombpartypmo';
+const GH_REPO   = 'Risk-Management';
+const GH_FILE   = 'appsup-data.json';
+const GH_BRANCH = 'main';
+const GH_TOKEN  = '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'; /* replace before pushing */
+
+/* ══════════════════════════════════════════════════════
+   SYNC ENGINE
+   READ  → public raw URL, no auth, works for all 200 users
+   WRITE → GitHub Contents API with token, debounced 1.5s
+══════════════════════════════════════════════════════ */
+const GH = {
+  data : {},
+  sha  : null,
+  dirty: false,
+  timer: null,
+
+  get(k)    { return this.data[k] ?? null; },
+  set(k, v) {
+    this.data[k] = v;
+    this.dirty   = true;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.push(), 1500);
+  },
+
+  async pull() {
+    setSyncPill('loading', 'Loading…');
+    try {
+      const raw = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
+      const res = await fetch(raw);
+      if (res.ok) {
+        this.data = await res.json();
+        setSyncPill('ok', 'Live');
+      } else {
+        /* File doesn't exist yet — first run */
+        setSyncPill('ok', 'Ready');
+      }
+    } catch(e) { setSyncPill('err', 'Offline'); }
+
+    /* Grab SHA so we can update later */
+    try {
+      const r = await fetch(
+        `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
+        { headers:{ Authorization:`token ${GH_TOKEN}` } }
+      );
+      if (r.ok) { const d = await r.json(); this.sha = d.sha; }
+    } catch(e) {}
+  },
+
+  async push() {
+    if (!this.dirty) return;
+    setSyncPill('loading', 'Saving…');
+    try {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(this.data, null, 2))));
+      const body    = { message: 'Update APPSUP content', content, branch: GH_BRANCH };
+      if (this.sha) body.sha = this.sha;
+      const res = await fetch(
+        `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
+        { method:'PUT', headers:{ Authorization:`token ${GH_TOKEN}`, 'Content-Type':'application/json' }, body:JSON.stringify(body) }
+      );
+      if (res.ok) {
+        const d = await res.json();
+        this.sha   = d.content.sha;
+        this.dirty = false;
+        setSyncPill('ok', 'Saved ✓');
+      } else {
+        setSyncPill('err', 'Save failed');
+        showToast('⚠ Could not save — check token or network');
+      }
+    } catch(e) { setSyncPill('err', 'Network error'); }
+  }
+};
+
+function setSyncPill(state, label) {
+  const p = document.getElementById('sync-pill');
+  const l = document.getElementById('sync-label');
+  if (!p) return;
+  p.className = 'sync-pill ' + state;
+  l.textContent = label;
+}
+
+/* ══════════════════════════════════════════════════════
+   ALWAYS-ON EDITABLE CONTENT
+   Every [data-e] element is contenteditable for everyone.
+   On blur → debounced save to GitHub.
+══════════════════════════════════════════════════════ */
+const CONTENT_SEL = [
+  'tbody td',
+  '.step-title', '.step-desc',
+  '.play-title', '.play-desc',
+  '.codes-card p',
+  '.contact-row-val',
+  '.alert',
+  '.template-box',
+  '.page-header h2', '.page-header p',
+  '.section-head-text h3', '.section-head-text span',
+  '.war-room-label',
+  '.check-item .chk-text',
+].join(',');
+
+function assignKeys() {
+  document.querySelectorAll(CONTENT_SEL).forEach((el, i) => {
+    if (!el.dataset.e) el.dataset.e = 'c' + i;
+    el.contentEditable = 'true';
+    el.addEventListener('blur', () => {
+      GH.set(el.dataset.e, el.innerHTML);
+    });
+  });
+}
+
+function applyData() {
+  /* Text content */
+  document.querySelectorAll('[data-e]').forEach(el => {
+    const v = GH.get(el.dataset.e);
+    if (v !== null) el.innerHTML = v;
+  });
+
+  /* War room URL */
+  const wr = GH.get('war-room-url');
+  if (wr) {
+    document.getElementById('war-room-input').value = wr;
+    document.getElementById('war-room-display').textContent = wr;
+    document.getElementById('war-room-display').className = 'war-room-url set';
+  }
+
+  /* Page tree statuses */
+  pageTree.forEach((_, i) => {
+    const st = GH.get('pt-status-' + i); if (!st) return;
+    const btn = document.querySelector(`button.pt-status[onclick*="cyclePtStatus(this,${i})"]`);
+    if (btn) { btn.className = 'pt-status ' + st; btn.textContent = PT_LABELS[st]; }
+  });
+
+  /* Checklists */
+  document.querySelectorAll('.check-item').forEach(li => {
+    const chk = li.querySelector('.chk'); if (!chk) return;
+    const m = (chk.getAttribute('onclick') || '').match(/toggleCheck\('([^']+)'\)/);
+    if (!m) return;
+    if (GH.get('chk-' + m[1]) === '1') { chk.classList.add('done'); li.classList.add('done-item'); }
+  });
+
+  /* Simulations */
+  [1, 2].forEach(n => {
+    const st = GH.get('sim' + n + '-status');
+    const dt = GH.get('sim' + n + '-date');
+    if (st) { document.getElementById('sim' + n + '-sel').value = st; updateSimStatus(n); }
+    if (dt)   document.getElementById('sim' + n + '-date').value = dt;
+  });
+
+  /* Modal bodies */
+  ['sev1','sev2','sev3','orders','stream','warroom','postmortem'].forEach(k => {
+    const v = GH.get('modal-' + k);
+    if (v && MODALS[k]) MODALS[k].body = v;
+  });
+}
+
+/* Make modal content editable after open */
+const _openModal = openModal;
+window.openModal = function(key) {
+  _openModal(key);
+  setTimeout(() => {
+    const body = document.getElementById('m-body');
+    if (!body) return;
+    body.querySelectorAll('td, .m-p, .m-note, .m-alert, .m-step-title, .m-step-desc, .m-template, .m-war-template').forEach((el, i) => {
+      el.dataset.e  = 'modal-' + key + '-' + i;
+      el.contentEditable = 'true';
+      const v = GH.get(el.dataset.e);
+      if (v !== null) el.innerHTML = v;
+      el.addEventListener('blur', () => GH.set(el.dataset.e, el.innerHTML));
+    });
+  }, 60);
+};
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'save-toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+
+/* ── INIT ── */
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+GH.pull().then(() => { applyData(); assignKeys(); });
+</script>
+</body>
+</html>
+    return {
+      token : localStorage.getItem('appsup-gh-token') || '',
+      owner : localStorage.getItem('appsup-gh-owner') || '',
+      repo  : localStorage.getItem('appsup-gh-repo')  || '',
+      file  : localStorage.getItem('appsup-gh-file')  || 'appsup-data.json',
+    };
+  },
+  configured() { const c=this.cfg(); return !!(c.token && c.owner && c.repo); },
+
+  /* Shared data (same for everyone) — loaded from GitHub, stored in memory */
+  data : {},
+  sha  : null,   /* current file SHA — required by GitHub API for updates */
+  dirty: false,
+  pushTimer: null,
+
+  /* ── READ from GitHub ── */
+  async pull() {
+    setSyncStatus('loading','Loading…');
+    const c = this.cfg();
+    if (!c.owner || !c.repo) { setSyncStatus('idle','Not configured'); return; }
+    try {
+      /* Raw URL works for public repos with no auth; add cache-buster */
+      const rawUrl = `https://raw.githubusercontent.com/${c.owner}/${c.repo}/main/${c.file}?t=${Date.now()}`;
+      const res = await fetch(rawUrl);
+      if (res.ok) {
+        this.data = await res.json();
+        setSyncStatus('ok','Synced');
+      } else if (res.status === 404) {
+        /* File doesn't exist yet — fresh start */
+        this.data = {};
+        setSyncStatus('ok','Ready — no data yet');
+      } else {
+        setSyncStatus('err','Load failed');
+      }
+      /* Get SHA so we can update the file later (needs token) */
+      if (c.token) {
+        const apiRes = await fetch(
+          `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.file}`,
+          { headers:{ Authorization:`token ${c.token}` } }
+        );
+        if (apiRes.ok) { const d=await apiRes.json(); this.sha=d.sha; }
+      }
+    } catch(e) { setSyncStatus('err','Network error'); }
+  },
+
+  /* ── WRITE to GitHub (debounced 1.5 s) ── */
+  set(key, val) {
+    this.data[key] = val;
+    this.dirty = true;
+    clearTimeout(this.pushTimer);
+    this.pushTimer = setTimeout(() => this.push(), 1500);
+  },
+  get(key) { return this.data[key] ?? null; },
+
+  async push() {
+    if (!this.dirty) return;
+    const c = this.cfg();
+    if (!c.token) { showToast('⚠ Add your GitHub token to sync'); setSyncStatus('err','No token'); return; }
+    setSyncStatus('loading','Saving…');
+    try {
+      const json    = JSON.stringify(this.data, null, 2);
+      const b64     = btoa(unescape(encodeURIComponent(json)));
+      const body    = { message:'Update APPSUP hub content', content:b64 };
+      if (this.sha) body.sha = this.sha;
+      const res = await fetch(
+        `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.file}`,
+        { method:'PUT', headers:{ Authorization:`token ${c.token}`, 'Content-Type':'application/json' }, body:JSON.stringify(body) }
+      );
+      if (res.ok) {
+        const d = await res.json();
+        this.sha   = d.content.sha;
+        this.dirty = false;
+        setSyncStatus('ok','Saved to GitHub ✓');
+        showToast('Saved to GitHub ✓');
+      } else {
+        const err = await res.json();
+        setSyncStatus('err', err.message || 'Save failed');
+        showToast('⚠ Save failed — check token');
+      }
+    } catch(e) { setSyncStatus('err','Network error'); showToast('⚠ Network error'); }
+  }
+};
+
+/* ── SYNC STATUS PILL ── */
+function setSyncStatus(state, label) {
+  const p = document.getElementById('sync-pill');
+  const l = document.getElementById('sync-label');
+  if (!p) return;
+  p.className = 'sync-pill ' + state;
+  l.textContent = label;
+}
+
+/* ── GITHUB SETUP MODAL ── */
+function openGhModal() {
+  const c = GH.cfg();
+  document.getElementById('gh-token').value = c.token;
+  document.getElementById('gh-owner').value = c.owner;
+  document.getElementById('gh-repo').value  = c.repo;
+  document.getElementById('gh-file').value  = c.file || 'appsup-data.json';
+  document.getElementById('gh-status-msg').className = 'gh-status';
+  document.getElementById('gh-modal-overlay').classList.add('open');
+}
+function closeGhModal()     { document.getElementById('gh-modal-overlay').classList.remove('open'); }
+function closeGhOutside(e)  { if(e.target===document.getElementById('gh-modal-overlay')) closeGhModal(); }
+
+async function testGhConnection() {
+  const btn = document.getElementById('gh-test-btn');
+  const msg = document.getElementById('gh-status-msg');
+  btn.textContent = 'Testing…'; btn.disabled = true;
+  const token = document.getElementById('gh-token').value.trim();
+  const owner = document.getElementById('gh-owner').value.trim();
+  const repo  = document.getElementById('gh-repo').value.trim();
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+      headers: { Authorization:`token ${token}` }
+    });
+    if (res.ok) {
+      msg.className = 'gh-status ok'; msg.textContent = '✓ Connected! Repository found and accessible.';
+    } else if (res.status === 401) {
+      msg.className = 'gh-status err'; msg.textContent = '✗ Invalid token — check it and try again.';
+    } else if (res.status === 404) {
+      msg.className = 'gh-status err'; msg.textContent = '✗ Repository not found — check the owner and repo name.';
+    } else {
+      msg.className = 'gh-status err'; msg.textContent = '✗ Connection failed (status ' + res.status + ')';
+    }
+  } catch(e) { msg.className = 'gh-status err'; msg.textContent = '✗ Network error — check your internet connection.'; }
+  btn.textContent = 'Test Connection'; btn.disabled = false;
+}
+
+function saveGhConfig() {
+  const token = document.getElementById('gh-token').value.trim();
+  const owner = document.getElementById('gh-owner').value.trim();
+  const repo  = document.getElementById('gh-repo').value.trim();
+  const file  = document.getElementById('gh-file').value.trim() || 'appsup-data.json';
+  if (!token || !owner || !repo) {
+    document.getElementById('gh-status-msg').className='gh-status err';
+    document.getElementById('gh-status-msg').textContent='Please fill in all required fields.'; return;
+  }
+  localStorage.setItem('appsup-gh-token', token);
+  localStorage.setItem('appsup-gh-owner', owner);
+  localStorage.setItem('appsup-gh-repo',  repo);
+  localStorage.setItem('appsup-gh-file',  file);
+  closeGhModal();
+  showToast('GitHub sync configured ✓');
+  GH.pull().then(() => { applyData(); });
+}
+
+/* ══════════════════════════════════════════════════════
+   EDITABLE CONTENT SYSTEM
+══════════════════════════════════════════════════════ */
+const CONTENT_SEL = [
+  'tbody td', '.step-title', '.step-desc',
+  '.play-title', '.play-desc', '.codes-card p',
+  '.contact-row-val', '.alert', '.template-box',
+  '.page-header h2', '.page-header p',
+  '.section-head-text h3', '.section-head-text span',
+  '.war-room-label', '.check-item .chk-text', 'main li',
+].join(',');
+
+let editMode = false;
+
+function assignKeys() {
+  document.querySelectorAll(CONTENT_SEL).forEach((el, i) => {
+    if (!el.dataset.e) el.dataset.e = 'c' + i;
+  });
+}
+
+/* Apply all loaded GH.data to the DOM */
+function applyData() {
+  document.querySelectorAll('[data-e]').forEach(el => {
+    const v = GH.get(el.dataset.e);
+    if (v !== null) el.innerHTML = v;
+  });
+  /* Restore war room URL */
+  const wr = GH.get('war-room-url');
+  if (wr) {
+    document.getElementById('war-room-input').value = wr;
+    document.getElementById('war-room-display').textContent = wr;
+    document.getElementById('war-room-display').className = 'war-room-url set';
+  }
+  /* Restore page tree statuses */
+  pageTree.forEach((_,i) => {
+    const st = GH.get('pt-status-'+i);
+    if (!st) return;
+    const btn = document.querySelector(`button.pt-status[onclick*="cyclePtStatus(this,${i})"]`);
+    if (btn) { btn.className='pt-status '+st; btn.textContent=PT_LABELS[st]; }
+  });
+  /* Restore checklists */
+  document.querySelectorAll('.check-item').forEach(li => {
+    const chk = li.querySelector('.chk');
+    if (!chk) return;
+    const m = (chk.getAttribute('onclick')||'').match(/toggleCheck\('([^']+)'\)/);
+    if (!m) return;
+    if (GH.get('chk-'+m[1]) === '1') { chk.classList.add('done'); li.classList.add('done-item'); }
+  });
+  /* Restore sims */
+  [1,2].forEach(n => {
+    const st = GH.get('sim'+n+'-status');
+    const dt = GH.get('sim'+n+'-date');
+    if (st) { document.getElementById('sim'+n+'-sel').value=st; updateSimStatus(n); }
+    if (dt)   document.getElementById('sim'+n+'-date').value=dt;
+  });
+  /* Restore modal bodies */
+  ['sev1','sev2','sev3','orders','stream','warroom','postmortem'].forEach(k => {
+    const v = GH.get('modal-'+k);
+    if (v && MODALS[k]) MODALS[k].body = v;
+  });
+}
+
+function onBlur(el) {
+  GH.set(el.dataset.e, el.innerHTML);
+  setSyncStatus('loading','Saving…');
+}
+
+function toggleEdit() {
+  editMode = !editMode;
+  document.body.classList.toggle('editing', editMode);
+  const btn = document.getElementById('edit-btn');
+  btn.textContent = editMode ? '✓ Done Editing' : '✎ Edit Mode';
+  btn.classList.toggle('active', editMode);
+  document.querySelectorAll('[data-e]').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+    if (editMode) el.addEventListener('blur', () => onBlur(el));
+  });
+  if (editMode) {
+    if (!GH.configured()) showToast('Tip: click the sync pill to set up GitHub');
+    else showToast('Edit mode on — changes sync to GitHub');
+  }
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'save-toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+/* Hook into modal open — also make modal text editable + restorable */
+const _openModal = openModal;
+window.openModal = function(key) {
+  _openModal(key);
+  setTimeout(() => {
+    const body = document.getElementById('m-body');
+    if (!body) return;
+    body.querySelectorAll('td, .m-p, .m-note, .m-alert, .m-step-title, .m-step-desc, .m-template, .m-war-template').forEach((el, i) => {
+      el.dataset.e = 'modal-' + key + '-' + i;
+      const v = GH.get(el.dataset.e);
+      if (v !== null) el.innerHTML = v;
+      if (editMode) { el.contentEditable='true'; el.addEventListener('blur', () => onBlur(el)); }
+    });
+  }, 60);
+};
+
+/* ── INIT ── */
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+GH.pull().then(() => { applyData(); assignKeys(); });
+</script>
+</body>
+</html>
