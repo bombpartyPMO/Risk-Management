@@ -53,20 +53,6 @@
       "notes": "",
       "id": 14,
       "jiraKey": "PRR-2"
-    },
-    {
-      "id": 999,
-      "title": "ARTX probe risk",
-      "cat": "Technical",
-      "status": "Open",
-      "p": 1,
-      "i": 1,
-      "owner": "",
-      "identified": "2026-10-23",
-      "target": "2026-10-24",
-      "mitigation": "",
-      "notes": "",
-      "description": "test"
     }
   ]
 }
